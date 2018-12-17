@@ -2,13 +2,6 @@ import React from 'react';
 import Helper from '../Helper';
 
 class SubscriptionEvaluation extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            evaluation: {}
-        };
-        this.createPlan();
-    }
 
     createPlan = () => {
         console.log(this.props.match.params.info);
@@ -59,14 +52,15 @@ class SubscriptionEvaluation extends React.Component {
             let playdayNr = i + 1;
             evaluation["playday" + playdayNr] = playDay;
         }
-        this.setState({evaluation: evaluation});
+        return evaluation;
     };
 
     render() {
+        let evaluation = this.createPlan();
         let table = [];
-        for (let i = 0; i < Object.keys(this.state.evaluation).length; i++) {
+        for (let i = 0; i < Object.keys(evaluation).length; i++) {
             let playdayNr = i + 1;
-            let playday = this.state.evaluation["playday" + playdayNr];
+            let playday = evaluation["playday" + playdayNr];
             let tableRows = [];
             for (let j = 0; j < playday.singles.length; j++) {
                 let columns = [];
