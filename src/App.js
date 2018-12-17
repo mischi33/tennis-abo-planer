@@ -10,7 +10,7 @@ class App extends Component {
             <Router>
                 <div>
                     <Route path="/" exact component={TennisSubscriptionForm}/>
-                    <Route path="/plan:evaluation" component={SubscriptionEvaluation}/>
+                    <Route path="/plan:info" component={SubscriptionEvaluation}/>
                 </div>
             </Router>
         );

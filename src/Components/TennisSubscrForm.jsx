@@ -11,68 +11,22 @@ class TennisSubscrForm extends React.Component {
             players: [],
             day: '',
             single: 0,
-            double: 0,
-            evaluation: []
+            double: 0
         };
     }
 
-    getRndInt(number) {
-        return Math.floor(Math.random() * number);
-    }
-
     handleSubmit = (event) => {
-        if (this.validateInputs()) {
-            let start = new Date(this.state.startDate);
-            let weekday = getWeekday(start.getDay());
-            let weeks = weeksBetween(start, new Date(this.state.endDate));
-
-            let evaluation = {};
-            let playCounter = [];
-            for (let i = 0; i < this.state.players.length; i++) {
-                playCounter.push(0);
-            }
-
-            for (let i = 0; i < weeks; i++) {
-                let playDay = {};
-                let date = new Date(this.state.startDate);
-                date.setDate(date.getDate() + i * 7);
-
-                playDay.weekday = weekday;
-                playDay.date = date;
-
-                //determine single games
-                let singles = [];
-                for (let j = 0; j < this.state.single; j++) {
-                    let p1 = this.getRndInt(this.state.numberOfPlayers);
-                    let p2 = this.getRndInt(this.state.numberOfPlayers);
-                    while (p1 === p2) {
-                        p2 = this.getRndInt(this.state.numberOfPlayers);
-                    }
-                    playCounter[p1]++;
-                    playCounter[p2]++;
-                    singles.push(this.state.players[p1] + ' - ' + this.state.players[p2]);
-                }
-                playDay.singles = singles;
-
-                //determine double games
-                let double = [];
-                for (let k = 0; k < this.state.double; k++) {
-                    let d1 = this.getRndInt(singles.length);
-                    let d2 = this.getRndInt(singles.length);
-                    while (d1 === d2) {
-                        d2 = this.getRndInt(singles.length);
-                    }
-                    double.push(singles[d1] + ' - ' + singles[d2]);
-                }
-                playDay.double = double;
-                let playdayNr = i + 1;
-                evaluation["playday" + playdayNr] = playDay;
-            }
-
-            //redirect to plan
-            let path = 'plan:' + JSON.stringify(evaluation);
-            this.props.history.push(path);
-        }
+        let info = {
+            "startDate": this.state.startDate,
+            "endDate": this.state.endDate,
+            "numberOfPlayers": this.state.numberOfPlayers,
+            "players": this.state.players,
+            "single": this.state.single,
+            "double": this.state.doctype
+        };
+        //redirect to plan
+        let path = 'plan' + JSON.stringify(info);
+        this.props.history.push(path);
     };
 
     handlePlayerChange = (event) => {
@@ -103,7 +57,6 @@ class TennisSubscrForm extends React.Component {
     validateInputs() {
         return true;
     }
-
 
 
     render() {
@@ -145,31 +98,6 @@ class TennisSubscrForm extends React.Component {
                 </form>
             </div>
         );
-    }
-}
-
-function weeksBetween(d1, d2) {
-    return Math.round((d2 - d1) / (7 * 24 * 60 * 60 * 1000));
-}
-
-function getWeekday(i) {
-    switch (i) {
-        case 0:
-            return 'Sonntag';
-        case 1:
-            return 'Montag';
-        case 2:
-            return 'Dienstag';
-        case 3:
-            return 'Mittwoch';
-        case 4:
-            return 'Donnerstag';
-        case 5:
-            return 'Freitag';
-        case 6:
-            return 'Samstag';
-        default:
-            return 'No weekday';
     }
 }
 
