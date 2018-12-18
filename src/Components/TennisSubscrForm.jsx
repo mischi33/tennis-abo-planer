@@ -24,8 +24,9 @@ class TennisSubscrForm extends React.Component {
                 "numberOfPlayers": this.state.numberOfPlayers,
                 "players": this.state.players,
                 "single": this.state.single,
-                "double": this.state.doctype
+                "double": this.state.double
             };
+
             //redirect to plan
             let path = 'plan' + JSON.stringify(info);
             this.props.history.push(path);
@@ -44,6 +45,7 @@ class TennisSubscrForm extends React.Component {
         let player = {};
         if (!this.state.players[event.target.id]) {
             player.name = event.target.value;
+            player.matchCounter = 0;
             players.push(player);
         } else {
             players[event.target.id].name = event.target.value;
