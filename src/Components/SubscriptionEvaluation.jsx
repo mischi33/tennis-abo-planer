@@ -4,17 +4,12 @@ import Helper from '../Helper';
 class SubscriptionEvaluation extends React.Component {
 
     createPlan = () => {
-        console.log(this.props.match.params.info);
         let info = JSON.parse(this.props.match.params.info);
         let start = new Date(info.startDate);
         let weekday = Helper.getWeekday(start.getDay());
         let weeks = Helper.weeksBetween(start, new Date(info.endDate));
 
         let evaluation = {};
-        let playCounter = [];
-        for (let i = 0; i < info.players.length; i++) {
-            playCounter.push(0);
-        }
 
         for (let i = 0; i < weeks; i++) {
             let playDay = {};
@@ -32,9 +27,7 @@ class SubscriptionEvaluation extends React.Component {
                 while (p1 === p2) {
                     p2 = Helper.getRndInt(info.numberOfPlayers);
                 }
-                playCounter[p1]++;
-                playCounter[p2]++;
-                singles.push(info.players[p1] + ' - ' + info.players[p2]);
+                singles.push(info.players[p1].name + ' - ' + info.players[p2].name);
             }
             playDay.singles = singles;
 

@@ -41,12 +41,14 @@ class TennisSubscrForm extends React.Component {
 
     handlePlayerChange = (event) => {
         let players = this.state.players.slice();
+        let player = {};
         if (!this.state.players[event.target.id]) {
-            players.push(event.target.value);
+            player.name = event.target.value;
+            players.push(player);
         } else {
-            players[event.target.id] = event.target.value;
+            players[event.target.id].name = event.target.value;
         }
-        this.setState({players});
+        this.setState({players: players});
     };
 
     renderPlayers(numberOfPlayer) {
