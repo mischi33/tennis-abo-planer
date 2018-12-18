@@ -5,7 +5,7 @@ class TennisSubscrForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            startDate: new Date(),
+            startDate: null,
             endDate: null,
             numberOfPlayers: 4,
             players: [],
@@ -16,17 +16,27 @@ class TennisSubscrForm extends React.Component {
     }
 
     handleSubmit = (event) => {
-        let info = {
-            "startDate": this.state.startDate,
-            "endDate": this.state.endDate,
-            "numberOfPlayers": this.state.numberOfPlayers,
-            "players": this.state.players,
-            "single": this.state.single,
-            "double": this.state.doctype
-        };
-        //redirect to plan
-        let path = 'plan' + JSON.stringify(info);
-        this.props.history.push(path);
+        let errors = this.validateInputs();
+        if (errors.length === 0) {
+            let info = {
+                "startDate": this.state.startDate,
+                "endDate": this.state.endDate,
+                "numberOfPlayers": this.state.numberOfPlayers,
+                "players": this.state.players,
+                "single": this.state.single,
+                "double": this.state.doctype
+            };
+            //redirect to plan
+            let path = 'plan' + JSON.stringify(info);
+            this.props.history.push(path);
+        } else {
+            let msg = '';
+            for (let i = 0; i < errors.length; i++) {
+                msg = msg + errors[i] + '\n';
+            }
+            alert(msg);
+            event.preventDefault();
+        }
     };
 
     handlePlayerChange = (event) => {
@@ -55,7 +65,36 @@ class TennisSubscrForm extends React.Component {
     }
 
     validateInputs() {
-        return true;
+        let errors = [];
+        if (!this.state.startDate) {
+            errors.push("Bitte geben Sie ein Startdatum an.");
+        }
+        if (!this.state.endDate) {
+            errors.push("Bitte geben Sie ein Enddatum an.");
+        }
+        if (this.state.single === 0 && this.state.double === 0) {
+            errors.push("Bitte geben Sie mindestens ein Einzel- oder Doppelspiel an.");
+        } else {
+            let pattern = new RegExp("[0-9]+");
+            if (!pattern.test(this.state.single)) {
+                errors.push("Einzelspiele: Bitte geben Sie nur Zahlen ein.");
+            } else if (!pattern.test(this.state.double)) {
+                errors.push("Doppelspiele: Bitte geben Sie nur Zahlen ein.");
+            }
+        }
+        if (this.state.players.length < this.state.numberOfPlayers - 1) {
+            errors.push("Bitte geben Sie alle Spielernamen an.")
+        } else {
+            let players = this.state.players;
+            for (let i = 0; i < players.length; i++) {
+                let pattern = new RegExp("[a-zA-ZäöüÄÖÜ]+");
+                if (!pattern.test(players[i])) {
+                    errors.push("Spielernamen: Bitte nur Buchstaben.");
+                    break;
+                }
+            }
+        }
+        return errors;
     }
 
 
@@ -94,7 +133,7 @@ class TennisSubscrForm extends React.Component {
                         <input type="text" value={this.state.double}
                                onChange={(event) => this.setState({double: event.target.value})}/>
                     </div>
-                    <button onClick={this.handleSubmit}>Plan erstellen!</button>
+                    <button onSubmit={this.handleSubmit}>Plan erstellen!</button>
                 </form>
             </div>
         );
